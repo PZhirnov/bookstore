@@ -1,13 +1,21 @@
 # books/models.py
-
+from django.contrib import admin
 from django.db import models
 from django.utils.text import slugify
+
+
+AGE_GROUP = (
+    (0, " < 13 "),
+    (1, " > 13 "),
+    (2, " > 19 "),
+)
 
 
 class Author(models.Model):
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50)
+    age = models.IntegerField(choices=AGE_GROUP, default=2)  # >19
     email = models.EmailField()
 
     def __str__(self):
@@ -20,6 +28,15 @@ class Publisher(models.Model):
     city = models.CharField(max_length=50, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
     website = models.URLField()
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def admin_name(self):
+        return f'{self.name} ({self.website})'
+
+
 
 
 class Book(models.Model):
