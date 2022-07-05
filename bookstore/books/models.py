@@ -2,12 +2,20 @@
 from django.contrib import admin
 from django.db import models
 from django.utils.text import slugify
+from django.db.models.signals import post_save, pre_save
 
 
 AGE_GROUP = (
     (0, " < 13 "),
     (1, " > 13 "),
     (2, " > 19 "),
+)
+
+BOOK_FORMAT = (
+    (0, 'PDF'),
+    (1, 'Hard Cover'),
+    (2, 'Epub'),
+    (3, 'HTML'),
 )
 
 
@@ -35,8 +43,6 @@ class Publisher(models.Model):
     @property
     def admin_name(self):
         return f'{self.name} ({self.website})'
-
-
 
 
 class Book(models.Model):
@@ -70,3 +76,50 @@ class BookImage(models.Model):
 
     def __str__(self):  # self.image is location
         return "%s (%s)" % (self.book.title, self.image)
+
+
+class Format(models.Model):
+    book = models.ForeignKey(Book)
+    book_format = models.IntegerField(choices=BOOK_FORMAT, default=0)  # PDF
+    price = models.DecimalField(decimal_places=2, max_digits=10)
+    sale_price = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
+    available = models.BooleanField(default=True)
+    inventory = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.book} ({BOOK_FORMAT[self.book_format][1]})"
+
+    def get_price(self):
+        if self.sale_price is not None:
+            return self.sale_price
+        else:
+            return self.sale_price
+
+
+# pre_save does not have "created" argument as post_save
+def pre_save_add_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        new_slug = slugify(instance.title)
+        exists = Book.objects.filter(slug=new_slug).exists()
+        if exists:
+            new_slug = f'{new_slug}-{instance.id}'
+        instance.slug = new_slug
+
+
+pre_save.connect(pre_save_add_slug, sender=Book)
+
+
+def post_save_format_for_book(sender, instance, created, *args, **kwargs):
+    formats = instance.format_set_all()
+    if formats.count() == 0:
+        new_format = Format()
+        new_format.book = instance
+        new_format.book_format = 0
+        new_format.price = 0.00
+        new_format.save()
+
+
+post_save.connect(post_save_format_for_book, sender=Book)
+
+
+
