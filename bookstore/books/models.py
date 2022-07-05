@@ -79,7 +79,7 @@ class BookImage(models.Model):
 
 
 class Format(models.Model):
-    book = models.ForeignKey(Book)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     book_format = models.IntegerField(choices=BOOK_FORMAT, default=0)  # PDF
     price = models.DecimalField(decimal_places=2, max_digits=10)
     sale_price = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
@@ -120,6 +120,3 @@ def post_save_format_for_book(sender, instance, created, *args, **kwargs):
 
 
 post_save.connect(post_save_format_for_book, sender=Book)
-
-
-

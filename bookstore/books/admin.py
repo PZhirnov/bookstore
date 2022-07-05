@@ -1,9 +1,19 @@
 from django.contrib import admin
-from .models import Author, Book, BookImage, Publisher
+from .models import Author, Book, BookImage, Publisher, Format
 from django.utils import timezone
 from .forms import AuthorForm
 
 # Register your models here.
+
+
+def draft_status(modeladmin, request, queryset):
+    queryset.update(
+        draft=False,
+        publication_date=timezone.now()
+    )
+
+
+draft_status.short_description = 'Mark book as published now'
 
 
 # Modify admin page
@@ -42,6 +52,11 @@ draft_status.short_description = 'Mark book as published now' # at admin page
 class BookImageInline(admin.TabularInline):
     model = BookImage
     extra = 5
+
+
+class BookInline(admin.TabularInline):
+    model = Book
+    extra = 1  # show only one item
 
 
 @admin.register(Book)
@@ -83,3 +98,10 @@ class BookAdmin(admin.ModelAdmin):
 admin.site.register(BookImage)
 # admin.site.register(Publisher)
 # admin.site.register(Book)
+
+
+@admin.register(Format)
+class FormatAdmin(admin.ModelAdmin):
+    save_as = True  # enable save as option
+    save_on_top = True  # show th save-buttons on top and bottom
+    radio_fields = {'book_format': admin.HORIZONTAL}  # admin.VERTICAL
