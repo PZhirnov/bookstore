@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView, ListView, DetailView
 from .models import Book
+from django.db.models import Q
 
 # Main views
 
@@ -75,7 +76,7 @@ def read_arg(request, val):
     print(request.headers)  # если нужно получить заголовки
     # если нужно получить переданные параметры в url
     # http://127.0.0.1:8000/books/freadargs/test/?testpar=RRRRRRRR  - testpar
-    print(request.GET)
+    print(request.GET)  # если нужно получить словарь с параметрами или **kwargs
     template_name = 'books/read_url.html'
     context = {
         "value": val,
@@ -91,3 +92,60 @@ def read_kwarg(request, test):
     }
     return render(request, template_name, context)
 
+
+# read *args using class-based view
+class ReadArg(TemplateView):
+    template_name = 'books/read_url.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ReadArg, self).get_context_data(*args, **kwargs)
+        # test is defined in 'url'
+        print('сработал')
+        context['value'] = self.args[0]
+        return context
+
+
+# read kwargs using class-based view
+class ReadKwarg(TemplateView):
+    template_name = 'books/read_url.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ReadKwarg, self).get_context_data(*args, **kwargs)
+        context['value'] = (self.kwargs.get("test"))
+        print(self.request.GET)
+        print(self.kwargs)
+        return context
+
+
+# Организация поиска
+# 1. Вариант
+class SearchBooks(ListView):
+    template_name = 'books/book_list.html'
+
+    def get_queryset(self):
+        val = self.kwargs.get("urlsearch")
+        if val:
+            queryset = Book.objects.filter(title__icontains=val)
+        else:
+            queryset = Book.objects.none()
+        return queryset
+
+
+# 2. Вариант
+class QSearchBooks(ListView):
+    template_name = 'books/book_list.html'
+
+    def get_queryset(self):
+        val = self.kwargs.get('qurlsearch')
+        if val:
+            queryset = Book.objects.filter(
+                Q(title__contains=val) |
+                Q(authors__first_name__icontains=val)
+            )
+            queryset = queryset.distinct()  # убираем повторы в выдаче, если у книги окажется несолько авторов
+        else:
+            queryset = Book.objects.none()
+        return queryset
+
+
+# ПОИСК ПО НАИМЕНОВАНИЮ КНИГИ ИЛИ СОДЕРЖИМОМУ
