@@ -1,0 +1,29 @@
+<!-- templates/bookstore/all_links.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h2>Описание книги: </h2>
+    <h4>Заголовок: {{ object.title }}</h4>
+    <br>
+    <h4>Formats and price (ForeignKey)</h4>
+    <h6>Всего форматов: {{ object.format_set.all.count }}</h6>
+        {% for format in object.format_set.all %}
+            <!-- forloop.counter start from 1
+            https://www.djangotemplatetagsandfilters.com/tags/for/
+            -->
+            <p>{{ forloop.counter }}: {{ format }} ${{ format.price }}</p>
+        {% endfor %}
+
+    <h4>Authors (Many-to-many)</h4>
+    <h6>Number of authors: {{ c.count }}</h6>
+        {% for author in object.authors.all %}
+            <p>{{ forloop.counter }}: {{ author }}</p>
+        {% endfor %}
+
+    <br>
+        <!-- <a href=" url 'book:booklist'"><p class="btn btn-info">Back to list</p></a> -->
+        <!-- i.e go to 'class-book in current folder' and 'get_book_list_url' -->
+        <a href="{{ object.get_book_list_url }}"><p class="btn btn-info">Назад к списку</p></a>
+{% endblock %}

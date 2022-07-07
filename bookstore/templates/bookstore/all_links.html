@@ -7,12 +7,191 @@
 
     <h1> Links </h1>
 
-    <p>This page will contain all links</p>
+    <table class="table">
+        <tr>
+            <th>View name (with URL)</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><a href="{% url 'home' %}">bookstore/views/all_links</td>
+            <td>Home page of this website</td>
+            <td>List of links</td>
+        </tr>
+        <tr>
+            <td><a href="{% url 'books:http_example' %}">books/views/http_example</td>
+            <td>function based view</td>
+            <td>HttpResponse</td>
+        </tr>
+        <tr>
+            <td><a href="{% url 'books:fexample' %}">books/views/fexample</td>
+            <td>function based view</td>
+            <td>Context in "function based" view</td>
+        </tr>
+        <tr>
+            <td><a href="{% url 'books:cexample' %}">books/views/cexample</td>
+            <td>function based view</td>
+            <td>Context in "Class based" view</td>
+        </tr>
+        <tr>
+            <td><a href="{% url 'books:booklist' %}">books/views/booklist</td>
+            <td>List View</td>
+            <td>Book List</td>
+        </tr>
+        <tr>
+            <td><a href="{% url 'books:booklist' %}">books/views/bookdetail</td>
+            <td>Detail View</td>
+            <td>Go to list page and click on any book for details</td>
+        </tr>
 
-    <p class="btn btn-info">Check Bootstrap 'btn-class' </p>
+    </table>
 
-    <br><br>
-    <p><span class="fa fa-list-alt"></span> Check Font-awe-some icon <span class="fa fa-bullhorn">
-    <span class="fa fa-battery-4"></span></p>
+  <table class="table">
+        <tr>
+            <th>View name (with URL)</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><a href="{% url 'home' %}">bookstore/views/all_links</td>
+            <td><canvas id="myChart3" height="40vw" width="80vw"></canvas></td>
+            <td>List of links</td>
+        </tr>
+  </table>
+
+
+
+<div id="chart_div"></div>
+
+
+  <div class="row">
+    <div class="col">
+        <canvas id="myChart"></canvas>
+    </div>
+    <div class="col">
+        <canvas id="myChart2"></canvas>
+    </div>
+  </div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+      const labels = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+      ];
+
+      const data = {
+        labels: labels,
+        datasets: [{
+          label: 'Загруженность сотрудников',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+      };
+
+      const config = {
+        type: 'bar',
+        data: data,
+        options: {}
+      };
+        const config2 = {
+        type: 'line',
+        data: data,
+        options: {}
+      };
+
+      const config3 = {
+        type: 'radar',
+          data: data,
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Chart.js Bar Chart'
+              }
+            }
+          },
+      };
+</script>
+
+<script>
+      const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+       const myChart2 = new Chart(
+        document.getElementById('myChart2'),
+        config2
+      );
+
+      const myChart3 = new Chart(
+        document.getElementById('myChart3'),
+        config3
+      );
+</script>
+
+
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['gantt']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function daysToMilliseconds(days) {
+      return days * 24 * 60 * 60 * 1000;
+    }
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'ID задачи');
+      data.addColumn('string', 'Заголовок задачи');
+      data.addColumn('date', 'Дата начала');
+      data.addColumn('date', 'Дата завершения');
+      data.addColumn('number', 'Периодичность');
+      data.addColumn('number', 'Процент завершения');
+      data.addColumn('string', 'Dependencies');
+
+      data.addRows([
+        ['Research', 'Оценка бизнеса',
+         new Date(2015, 0, 1), new Date(2015, 0, 5), null,  100,  null],
+        ['Write', 'Оценка оборудования',
+         null, new Date(2015, 0, 9), daysToMilliseconds(3), 25, 'Research,Outline'],
+        ['Cite', 'Оценка недвижимости',
+         null, new Date(2015, 0, 7), daysToMilliseconds(1), 20, 'Research'],
+        ['Complete', 'Согласование проекта',
+         null, new Date(2015, 0, 10), daysToMilliseconds(1), 0, 'Cite,Write'],
+        ['Outline', 'Подготовка архива',
+         null, new Date(2015, 0, 6), daysToMilliseconds(1), 100, 'Research']
+      ]);
+
+      var options = {
+        height: 275
+      };
+
+      var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+  </script>
+
+<body>
+
+</body>
+
+
+
 
 {% endblock %}

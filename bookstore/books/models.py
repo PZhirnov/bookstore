@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.db import models
 from django.utils.text import slugify
 from django.db.models.signals import post_save, pre_save
+from django.urls import reverse
 
 
 AGE_GROUP = (
@@ -27,7 +28,7 @@ class Author(models.Model):
     email = models.EmailField()
 
     def __str__(self):
-        return "%s, %s" % (self.last_name, self.first_name)
+        return f"{self.first_name} {self.last_name}"
 
 
 class Publisher(models.Model):
@@ -59,6 +60,17 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+    # url for book detail page
+    def get_absolute_url(self):
+        return reverse("books:bookdetail", kwargs={'pk': self.pk})
+
+        # return reverse("book:bookdetail", args=[str(self.pk)])
+        # return reverse("book:bookdetail", args=[str(self.id)])
+
+    # url for booklist page
+    def get_book_list_url(self):
+        return reverse("books:booklist")
 
 
 # upload location : upload/book/title/slug.jpg
