@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import TemplateView, ListView, DetailView
 from .models import Book
 from django.db.models import Q
+from .forms import AuthorForm
 
 # Main views
 
@@ -148,4 +149,54 @@ class QSearchBooks(ListView):
         return queryset
 
 
-# ПОИСК ПО НАИМЕНОВАНИЮ КНИГИ ИЛИ СОДЕРЖИМОМУ
+# Link to search form
+class BookSearch(TemplateView):
+    template_name = 'books/search_form.html'
+
+
+class BookSearchResult(ListView):
+    model = Book
+    template_name = 'books/book_list.html'
+
+    def get_queryset(self, *args, **kwargs):
+        print(self.request)
+        val = self.request.GET.get("q")
+        print(val)
+        if val:
+            queryset = Book.objects.filter(
+                Q(title__icontains=val) |
+                Q(content__icontains=val)
+            ).distinct()
+        else:
+            queryset = Book.objects.none()
+        print(queryset)
+        return queryset
+
+# Model Forms
+
+
+def author_create (request):
+    form = AuthorForm(request.POST or None)
+    error = None
+    if form.is_valid():
+        # Если нужно сразу сохранить данные формы
+        # form.save()
+        # Если нужно сделать какие-либо операции, то так:
+        new_item = form.save(commit=False)
+        context = {
+            "item": "Author",
+            "title": new_item.first_name,
+        }
+        new_item.save()
+        template_name = 'books/thanks_create.html'
+        return render(request, template_name, context)
+    else:
+        errors = form.errors
+        template_name = 'books/create_form.html'
+        context = {
+            "form": form,
+            "errors": errors,
+            "item": "Author"
+        }
+        return render(request, template_name, context)
+

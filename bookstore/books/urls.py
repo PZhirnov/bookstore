@@ -1,6 +1,7 @@
 from django.urls import path, re_path
 from .views import fexample, http_example, CExample, \
-    book_list, BookList, BookDetail, read_arg, read_kwarg, ReadArg, ReadKwarg, SearchBooks, QSearchBooks
+    book_list, BookList, BookDetail, read_arg, read_kwarg, \
+    ReadArg, ReadKwarg, SearchBooks, QSearchBooks, BookSearch, BookSearchResult, author_create
 
 app_name = 'books'
 
@@ -17,7 +18,11 @@ urlpatterns = [
     re_path(r'^readkwargs/(?P<test>\w+)/$', ReadKwarg.as_view(), name='readkwargs'),
     re_path(r'^searchfromurl/(?P<urlsearch>[\w-]+)/$', SearchBooks.as_view(), name="searchfromurl"), # search item received from url
     re_path(r'^qsearchfromurl/(?P<qurlsearch>[\w-]+)/$', QSearchBooks.as_view(), name="qsearchfromurl"),
+    re_path(r'booksearch/$', BookSearch.as_view(), name='booksearch'),
+    re_path(r'^booksearchresult/$', BookSearchResult.as_view(), name='booksearchresult'),
+    re_path(r'^fauthorcreate/$', author_create, name='fauthorcreate'),  # create author
 ]
+
 
 
 

@@ -122,7 +122,7 @@ pre_save.connect(pre_save_add_slug, sender=Book)
 
 
 def post_save_format_for_book(sender, instance, created, *args, **kwargs):
-    formats = instance.format_set_all()
+    formats = instance.format_set.all()
     if formats.count() == 0:
         new_format = Format()
         new_format.book = instance
