@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from .views import fexample, http_example, CExample, \
     book_list, BookList, BookDetail, read_arg, read_kwarg, \
-    ReadArg, ReadKwarg, SearchBooks, QSearchBooks, BookSearch, BookSearchResult, author_create
+    ReadArg, ReadKwarg, SearchBooks, QSearchBooks, BookSearch, BookSearchResult, author_create, AuthorList
 
 app_name = 'books'
 
@@ -21,6 +21,7 @@ urlpatterns = [
     re_path(r'booksearch/$', BookSearch.as_view(), name='booksearch'),
     re_path(r'^booksearchresult/$', BookSearchResult.as_view(), name='booksearchresult'),
     re_path(r'^fauthorcreate/$', author_create, name='fauthorcreate'),  # create author
+    re_path(r'^authorlist/$', AuthorList.as_view(), name="authorlist"),  # Author list
 ]
 
 

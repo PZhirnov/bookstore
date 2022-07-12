@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import TemplateView, ListView, DetailView
-from .models import Book
+from .models import Book, Author
 from django.db.models import Q
 from .forms import AuthorForm
 
@@ -175,7 +175,7 @@ class BookSearchResult(ListView):
 # Model Forms
 
 
-def author_create (request):
+def author_create(request):
     form = AuthorForm(request.POST or None)
     error = None
     if form.is_valid():
@@ -200,3 +200,17 @@ def author_create (request):
         }
         return render(request, template_name, context)
 
+
+class AuthorList(ListView):
+    # # default template location : lowercaseAppName/lowercaseAppName_list.html
+    # template_name = "books/book_list.html"
+
+    # by default 'queryset' is sent as context
+    queryset = Author.objects.all()  # 'queryset' is reserved name like 'template_name'
+
+    # to pass more context, inherit cotext with 'super' and
+    # then include the items in the context  using 'get_context_data'
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["name"] = "Harry"
+        return context

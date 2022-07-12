@@ -1,0 +1,17 @@
+<!-- templates/bookstore/all_links.html -->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h2> Hello {{ name }} </h2>
+
+    <h4> List of authors </h4>
+
+    <ul>
+    {% for obj in object_list %}
+        <li> {{ obj }} </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

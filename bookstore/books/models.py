@@ -21,10 +21,10 @@ BOOK_FORMAT = (
 
 
 class Author(models.Model):
-    first_name = models.CharField(max_length=50)
-    middle_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50)
-    age = models.IntegerField(choices=AGE_GROUP, default=2)  # >19
+    first_name = models.CharField(max_length=50, verbose_name='Имя:')
+    middle_name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Отчество:')
+    last_name = models.CharField(max_length=50, verbose_name='Фамилия:')
+    age = models.IntegerField(choices=AGE_GROUP, default=2, verbose_name='Возраст:')  # >19
     email = models.EmailField()
 
     def __str__(self):
