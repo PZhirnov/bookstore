@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # crispy-forms
     'crispy_forms',
     # my app
+    'registration',
     'books',
 ]
 
@@ -141,3 +142,24 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads') # save uploaded data
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+# Закомментировали для использования registration-redux
+# LOGIN_URL = '/login/'
+# LOGIN_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/login/'
+
+#django-registration-redux settings
+ACCOUNT_ACTIVATION_DAYS = 7
+REGISTRATION_AUTO_LOGIN = True
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+
+# Email
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_HOST_USER = "test@valexpert.ru"  # os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = "cN4VWZcDf7HvL8Tp5lEM"  # os.environ.get('EMAIL_PASSWORD')
+EMAIL_PORT = 465
+EMAIL_USE_TLS = True
+
+
+

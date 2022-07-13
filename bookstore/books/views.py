@@ -4,6 +4,7 @@ from django.views.generic import TemplateView, ListView, DetailView
 from .models import Book, Author
 from django.db.models import Q
 from .forms import AuthorForm
+from django.contrib.auth.decorators import login_required
 
 # Main views
 
@@ -175,10 +176,11 @@ class BookSearchResult(ListView):
 # Model Forms
 
 
+@login_required() # LOGIN_URL = '/login/' in settings.py или можно сразу тут указать login_required(login_url='/login/')
 def author_create(request):
     form = AuthorForm(request.POST or None)
     error = None
-    if form.is_valid():
+    if form.is_valid() and request.user.is_staff:
         # Если нужно сразу сохранить данные формы
         # form.save()
         # Если нужно сделать какие-либо операции, то так:
@@ -191,7 +193,10 @@ def author_create(request):
         template_name = 'books/thanks_create.html'
         return render(request, template_name, context)
     else:
-        errors = form.errors
+        if not request.user.is_staff:
+            errors = "Only staff can add data"
+        else:
+            errors = form.errors
         template_name = 'books/create_form.html'
         context = {
             "form": form,

@@ -18,11 +18,18 @@ from django.conf.urls.static import static
 from django.urls import path, re_path, include
 from django.conf import settings
 from .view import all_links
+from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^$', all_links, name='home'),
     path('books/', include("books.urls")),  # books app
+    # default location for html is 'registration/login.html'
+    re_path(r'^login/', LoginView.as_view(), name='login'),
+    re_path(r'^logout/', LogoutView.as_view(), name='logout'),
+    # registration-redux
+    # path('accounts/', include('django_registration.backends.activation.urls')),
+    re_path('^accounts/', include('registration.backends.default.urls')),
 ]
 
 # required to see the media files in debug mode
