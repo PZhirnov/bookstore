@@ -162,7 +162,7 @@ class BookSearchResult(ListView):
     def get_queryset(self, *args, **kwargs):
         print(self.request)
         val = self.request.GET.get("q")
-        print(val)
+        # print(val)
         if val:
             queryset = Book.objects.filter(
                 Q(title__icontains=val) |
@@ -170,7 +170,7 @@ class BookSearchResult(ListView):
             ).distinct()
         else:
             queryset = Book.objects.none()
-        print(queryset)
+        # print(queryset)
         return queryset
 
 # Model Forms
@@ -213,7 +213,7 @@ class AuthorList(ListView):
     # by default 'queryset' is sent as context
     queryset = Author.objects.all()  # 'queryset' is reserved name like 'template_name'
 
-    # to pass more context, inherit cotext with 'super' and
+    # to pass more context, inherit context with 'super' and
     # then include the items in the context  using 'get_context_data'
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

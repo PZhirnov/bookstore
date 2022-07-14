@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.text import slugify
 from django.db.models.signals import post_save, pre_save
 from django.urls import reverse
+# from .validators import valid_email
 
 
 AGE_GROUP = (
@@ -25,7 +26,7 @@ class Author(models.Model):
     middle_name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Отчество:')
     last_name = models.CharField(max_length=50, verbose_name='Фамилия:')
     age = models.IntegerField(choices=AGE_GROUP, default=2, verbose_name='Возраст:')  # >19
-    email = models.EmailField()
+    email = models.EmailField()  # email = models.EmailField(validators=[valid_email])
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
